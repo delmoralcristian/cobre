@@ -25,9 +25,7 @@ public class NotificationEventService {
     private static final int PAGE_SIZE = 100;
 
     private final DeliveryService deliveryService;
-
     private final NotificationEventRepository notificationEventRepository;
-
     private final NotificationEventMapper notificationEventMapper;
 
     @TrackProcessingTime

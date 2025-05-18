@@ -13,6 +13,8 @@ public interface NotificationEventRepository extends CrudRepository<Notification
 
     Optional<NotificationEvent> findByEventId(String eventId);
 
+    boolean existsByEventId(String eventId);
+
     Page<NotificationEvent> findByClientIdAndDeliveryStatusAndDeliveryDateBetween(
         Long clientId,
         String deliveryStatus,
