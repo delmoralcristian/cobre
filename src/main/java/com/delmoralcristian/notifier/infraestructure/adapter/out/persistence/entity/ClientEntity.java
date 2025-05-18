@@ -1,4 +1,4 @@
-package com.delmoralcristian.notifier.model;
+package com.delmoralcristian.notifier.infraestructure.adapter.out.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Client implements Serializable {
+public class ClientEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

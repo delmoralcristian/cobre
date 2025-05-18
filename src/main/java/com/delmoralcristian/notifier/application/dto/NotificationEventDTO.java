@@ -1,4 +1,4 @@
-package com.delmoralcristian.notifier.dto;
+package com.delmoralcristian.notifier.application.dto;
 
 import com.delmoralcristian.notifier.enums.EEventType;
 import com.delmoralcristian.notifier.enums.ENotificationStatus;

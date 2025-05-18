@@ -1,8 +1,8 @@
-package com.delmoralcristian.notifier.controller;
+package com.delmoralcristian.notifier.infraestructure.adapter.in.web;
 
-import com.delmoralcristian.notifier.dto.NotificationEventDTO;
+import com.delmoralcristian.notifier.application.dto.NotificationEventDTO;
+import com.delmoralcristian.notifier.application.service.NotificationEventService;
 import com.delmoralcristian.notifier.enums.ENotificationStatus;
-import com.delmoralcristian.notifier.service.NotificationEventService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationEventController {
 
     private final NotificationEventService notificationEventService;
-    
+
 
     @GetMapping
     public ResponseEntity<List<NotificationEventDTO>> getAll(
