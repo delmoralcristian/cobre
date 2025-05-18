@@ -1,7 +1,7 @@
 package com.delmoralcristian.notifier.controller;
 
 import com.delmoralcristian.notifier.dto.NotificationEventDTO;
-import com.delmoralcristian.notifier.enums.NotificationStatus;
+import com.delmoralcristian.notifier.enums.ENotificationStatus;
 import com.delmoralcristian.notifier.service.NotificationEventService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +27,7 @@ public class NotificationEventController {
     @GetMapping
     public ResponseEntity<List<NotificationEventDTO>> getAll(
         @RequestParam String clientId,
-        @RequestParam(required = false) NotificationStatus status,
+        @RequestParam(required = false) ENotificationStatus status,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
 

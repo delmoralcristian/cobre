@@ -1,7 +1,8 @@
 package com.delmoralcristian.notifier.mapper;
 
 import com.delmoralcristian.notifier.dto.NotificationEventDTO;
-import com.delmoralcristian.notifier.enums.NotificationStatus;
+import com.delmoralcristian.notifier.enums.EEventType;
+import com.delmoralcristian.notifier.enums.ENotificationStatus;
 import com.delmoralcristian.notifier.model.NotificationEvent;
 import org.mapstruct.Mapper;
 
@@ -12,11 +13,12 @@ public interface NotificationEventMapper {
 
         return new NotificationEventDTO(
             event.getEventId(),
-            event.getEventType(),
+            EEventType.fromString(event.getEventType()),
             event.getContent(),
             event.getDeliveryDate(),
-            NotificationStatus.valueOf(event.getDeliveryStatus())
+            ENotificationStatus.valueOf(event.getDeliveryStatus())
         );
+
 
     }
 

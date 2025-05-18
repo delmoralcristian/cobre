@@ -1,6 +1,6 @@
 package com.delmoralcristian.notifier.enums;
 
-public enum NotificationStatus {
+public enum ENotificationStatus {
     PENDING,
     COMPLETED,
     FAILED

@@ -1,8 +1,8 @@
 package com.delmoralcristian.notifier.service;
 
-import com.delmoralcristian.notifier.config.TrackProcessingTime;
+import com.delmoralcristian.notifier.advice.TrackProcessingTime;
 import com.delmoralcristian.notifier.dto.NotificationEventDTO;
-import com.delmoralcristian.notifier.enums.NotificationStatus;
+import com.delmoralcristian.notifier.enums.ENotificationStatus;
 import com.delmoralcristian.notifier.mapper.NotificationEventMapper;
 import com.delmoralcristian.notifier.repository.NotificationEventRepository;
 import com.delmoralcristian.notifier.utils.DateUtil;
@@ -14,9 +14,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -25,6 +24,8 @@ public class NotificationEventService {
 
     private static final int PAGE_SIZE = 100;
 
+    private final DeliveryService deliveryService;
+
     private final NotificationEventRepository notificationEventRepository;
 
     private final NotificationEventMapper notificationEventMapper;
@@ -32,7 +33,7 @@ public class NotificationEventService {
     @TrackProcessingTime
     public List<NotificationEventDTO> findByFilters(
         String clientId,
-        NotificationStatus status,
+        ENotificationStatus status,
         LocalDateTime from,
         LocalDateTime to) {
 
@@ -89,10 +90,15 @@ public class NotificationEventService {
         return this.notificationEventMapper.transformToDto(event);
     }
 
-    @Retryable(retryFor = Exception.class, maxAttempts = 4, backoff = @Backoff(delay = 100))
     @TrackProcessingTime
-    public void replayNotification(String id) {
-        log.info("Replaying notification event with id: {}", id);
-        // Logic to replay the notification
+    @Transactional
+    public void replayNotification(String eventId) {
+        log.info("Replaying notification event with eventId: {}", eventId);
+
+        var event = this.notificationEventRepository.findByEventId(eventId)
+            .orElseThrow(() -> new EntityNotFoundException("Notification event not found for eventId: " + eventId));
+
+        this.deliveryService.reSend(event);
+
     }
 }

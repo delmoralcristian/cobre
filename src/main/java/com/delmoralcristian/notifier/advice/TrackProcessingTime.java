@@ -1,4 +1,4 @@
-package com.delmoralcristian.notifier.config;
+package com.delmoralcristian.notifier.advice;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

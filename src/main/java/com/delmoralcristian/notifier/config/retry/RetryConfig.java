@@ -1,4 +1,4 @@
-package com.delmoralcristian.notifier.config;
+package com.delmoralcristian.notifier.config.retry;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
