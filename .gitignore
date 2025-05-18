@@ -15,6 +15,10 @@ paho*/*
 .settings
 .springBeans
 .sts4-cache
+.gitattributes
+.mvn/
+mvnw
+mvnw.cmd
 
 ### IntelliJ IDEA ###
 .idea
