@@ -1,10 +1,11 @@
-package com.delmoralcristian.notifier.service;
+package com.delmoralcristian.notifier.application.service;
 
 import com.delmoralcristian.notifier.advice.TrackProcessingTime;
-import com.delmoralcristian.notifier.dto.NotificationEventDTO;
+import com.delmoralcristian.notifier.application.dto.NotificationEventDTO;
+import com.delmoralcristian.notifier.application.port.in.NotificationEventUseCase;
+import com.delmoralcristian.notifier.application.port.out.NotificationEventPersistencePort;
 import com.delmoralcristian.notifier.enums.ENotificationStatus;
-import com.delmoralcristian.notifier.mapper.NotificationEventMapper;
-import com.delmoralcristian.notifier.repository.NotificationEventRepository;
+import com.delmoralcristian.notifier.infraestructure.adapter.out.mapper.NotificationEventMapper;
 import com.delmoralcristian.notifier.utils.DateUtil;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -20,15 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class NotificationEventService {
+public class NotificationEventService implements NotificationEventUseCase {
 
     private static final int PAGE_SIZE = 100;
 
     private final DeliveryService deliveryService;
-    private final NotificationEventRepository notificationEventRepository;
+    private final NotificationEventPersistencePort notificationAdapter;
     private final NotificationEventMapper notificationEventMapper;
 
     @TrackProcessingTime
+    @Override
     public List<NotificationEventDTO> findByFilters(
         String clientId,
         ENotificationStatus status,
@@ -48,6 +50,28 @@ public class NotificationEventService {
         return this.fetchAllPages(clientId, status.name(), fromDate, toDate);
     }
 
+    @TrackProcessingTime
+    @Override
+    public NotificationEventDTO getByEventId(String eventId) {
+        log.info("Finding notification event by eventId: {}", eventId);
+        var event = this.notificationAdapter.findByEventId(eventId)
+            .orElseThrow(() -> new EntityNotFoundException("Notification event not found for eventId: " + eventId));
+        return this.notificationEventMapper.transformToDto(event);
+    }
+
+    @TrackProcessingTime
+    @Transactional
+    @Override
+    public void replayNotification(String eventId) {
+        log.info("Replaying notification event with eventId: {}", eventId);
+
+        var event = this.notificationAdapter.findByEventId(eventId)
+            .orElseThrow(() -> new EntityNotFoundException("Notification event not found for eventId: " + eventId));
+
+        this.deliveryService.reSend(event);
+
+    }
+
     private List<NotificationEventDTO> fetchAllPages(
         String clientId, String status, Date fromDate, Date toDate) {
 
@@ -57,7 +81,7 @@ public class NotificationEventService {
 
         while (true) {
             var pageable = PageRequest.of(pageNumber, pageSize);
-            var page = this.notificationEventRepository
+            var page = this.notificationAdapter
                 .findByClientIdAndDeliveryStatusAndDeliveryDateBetween(
                     Long.valueOf(clientId), status, fromDate, toDate, pageable);
 
@@ -77,26 +101,5 @@ public class NotificationEventService {
         }
 
         return results;
-    }
-
-
-    @TrackProcessingTime
-    public NotificationEventDTO getByEventId(String eventId) {
-        log.info("Finding notification event by eventId: {}", eventId);
-        var event = this.notificationEventRepository.findByEventId(eventId)
-            .orElseThrow(() -> new EntityNotFoundException("Notification event not found for eventId: " + eventId));
-        return this.notificationEventMapper.transformToDto(event);
-    }
-
-    @TrackProcessingTime
-    @Transactional
-    public void replayNotification(String eventId) {
-        log.info("Replaying notification event with eventId: {}", eventId);
-
-        var event = this.notificationEventRepository.findByEventId(eventId)
-            .orElseThrow(() -> new EntityNotFoundException("Notification event not found for eventId: " + eventId));
-
-        this.deliveryService.reSend(event);
-
     }
 }

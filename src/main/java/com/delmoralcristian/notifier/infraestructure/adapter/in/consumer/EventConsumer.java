@@ -1,8 +1,6 @@
-package com.delmoralcristian.notifier.consumer;
+package com.delmoralcristian.notifier.infraestructure.adapter.in.consumer;
 
-import com.delmoralcristian.notifier.consumer.dto.EventDTO;
-import com.delmoralcristian.notifier.mapper.NotificationEventMapper;
-import com.delmoralcristian.notifier.service.DeliveryService;
+import com.delmoralcristian.notifier.application.service.DeliveryService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
@@ -27,7 +25,6 @@ public class EventConsumer {
 
     private final DeliveryService deliveryService;
     private final ObjectMapper objectMapper;
-    private final NotificationEventMapper notificationEventMapper;
 
 
     @SqsListener(

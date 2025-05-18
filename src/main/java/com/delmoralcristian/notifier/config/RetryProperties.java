@@ -1,4 +1,4 @@
-package com.delmoralcristian.notifier.config.retry;
+package com.delmoralcristian.notifier.config;
 
 import lombok.Getter;
 import lombok.Setter;

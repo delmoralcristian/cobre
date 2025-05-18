@@ -1,11 +1,11 @@
-package com.delmoralcristian.notifier.config.webhook;
+package com.delmoralcristian.notifier.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class WebhookConfig {
+public class RestTemplateConfig {
 
     @Bean
     public RestTemplate restTemplate() {

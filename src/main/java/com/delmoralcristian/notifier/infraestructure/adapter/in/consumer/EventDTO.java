@@ -1,4 +1,4 @@
-package com.delmoralcristian.notifier.consumer.dto;
+package com.delmoralcristian.notifier.infraestructure.adapter.in.consumer;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotBlank;
